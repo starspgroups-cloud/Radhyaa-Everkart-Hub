@@ -1,0 +1,8 @@
+{
+  "name": "Remix Radhyaa Everkart Hub",
+  "description": "Every Season. Every Occasion. Every Need. Premium Indian retail destination for seasonal items, luxury Shagun envelopes, fine bedsheets, and curated lifestyle essentials.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
