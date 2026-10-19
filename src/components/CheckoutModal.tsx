@@ -37,8 +37,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     freeShippingThreshold,
     clearCart,
     isGiftWrapped,
+    setIsGiftWrapped,
     giftMessage,
+    setGiftMessage,
     giftWrappingFee,
+    showToast,
   } = useCart();
   const {
     selectedPointsToRedeem,
@@ -420,11 +423,110 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 </div>
               </div>
 
+              {/* Gift Wrapping & Personalized Note */}
+              <div className="p-4 rounded-xl border border-[#ECE3D4] bg-[#FAF8F5]/80">
+                <div className="flex items-center justify-between mb-2.5">
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-[#112E1F] flex items-center gap-2">
+                    <Gift className="w-4 h-4 text-[#C5A059]" />
+                    <span>2. Gifting & Special Presentation</span>
+                  </h4>
+                  <span className="text-[10px] font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    Optional
+                  </span>
+                </div>
+
+                <label className="flex items-start gap-3 p-3 rounded-lg border border-[#ECE3D4] bg-white cursor-pointer hover:border-[#112E1F]/50 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={isGiftWrapped}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setIsGiftWrapped(checked);
+                      if (checked) {
+                        showToast?.('Added Signature Gift Wrapping (+₹49) with gift note! 🎁');
+                      } else {
+                        showToast?.('Gift wrapping removed.', 'info');
+                      }
+                    }}
+                    className="mt-0.5 h-4 w-4 rounded text-[#112E1F] border-[#ECE3D4] focus:ring-[#112E1F] accent-[#112E1F] cursor-pointer shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-semibold text-[#112E1F] flex items-center gap-1.5">
+                        <span>Add Signature Festive Gift Wrapping</span>
+                      </span>
+                      <span className="text-[11px] font-bold text-[#112E1F] bg-amber-100 px-2 py-0.5 rounded border border-amber-200 shrink-0">
+                        +₹49
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-stone-500 mt-0.5 leading-snug">
+                      Handcrafted botanical wrapping paper, royal gold zari ribbon & custom keepsake note card.
+                    </p>
+                  </div>
+                </label>
+
+                {/* Collapsible Personalized Gift Note Input */}
+                {isGiftWrapped && (
+                  <div className="mt-3 pt-3 border-t border-[#ECE3D4] space-y-2 animate-in fade-in duration-200">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <label htmlFor="checkout-gift-note" className="font-semibold text-[#112E1F] flex items-center gap-1.5">
+                        <span>Personalized Gift Note (Printed on Keepsake Card):</span>
+                      </label>
+                      <span className="text-[10px] text-stone-400 tabular-nums">
+                        {giftMessage.length}/150
+                      </span>
+                    </div>
+
+                    <textarea
+                      id="checkout-gift-note"
+                      rows={2}
+                      maxLength={150}
+                      value={giftMessage}
+                      onChange={(e) => setGiftMessage(e.target.value)}
+                      placeholder="Write your heartfelt message (e.g. Wishing you endless happiness and joy on this special celebration!)..."
+                      className="w-full p-2.5 text-xs bg-white border border-[#ECE3D4] rounded-lg focus:outline-hidden focus:border-[#112E1F] text-stone-800 placeholder-stone-400 resize-none leading-relaxed"
+                    />
+
+                    {/* Preset Quick Note Ideas */}
+                    <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                      <span className="text-[10px] text-stone-400">Quick templates:</span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setGiftMessage('Wishing you endless love, happiness, and joyous celebrations on this special day!')
+                        }
+                        className="text-[10px] px-2 py-0.5 rounded bg-white hover:bg-[#FAF8F5] text-stone-600 border border-[#ECE3D4] transition-colors cursor-pointer"
+                      >
+                        💍 Wedding
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setGiftMessage('May this festive season bring joy, auspicious beginnings, and peace to your family.')
+                        }
+                        className="text-[10px] px-2 py-0.5 rounded bg-white hover:bg-[#FAF8F5] text-stone-600 border border-[#ECE3D4] transition-colors cursor-pointer"
+                      >
+                        🪔 Festive
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setGiftMessage('With warmest love, heartfelt blessings, and best wishes for your beautiful home!')
+                        }
+                        className="text-[10px] px-2 py-0.5 rounded bg-white hover:bg-[#FAF8F5] text-stone-600 border border-[#ECE3D4] transition-colors cursor-pointer"
+                      >
+                        🌸 Blessings
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Payment Methods */}
               <div>
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-[#112E1F] mb-3 flex items-center gap-2">
                   <CreditCard className="w-4 h-4 text-[#C5A059]" />
-                  <span>2. Select Payment Method</span>
+                  <span>3. Select Payment Method</span>
                 </h4>
 
                 <div className="space-y-2">

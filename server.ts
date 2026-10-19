@@ -118,12 +118,63 @@ app.post('/api/chat', async (req: Request, res: Response) => {
   }
 });
 
+// Newsletter subscription endpoint
+interface NewsletterSubscriber {
+  email: string;
+  interests?: string[];
+  subscribedAt: string;
+}
+
+const subscribers: Map<string, NewsletterSubscriber> = new Map();
+
+app.post('/api/newsletter', (req: Request, res: Response) => {
+  try {
+    const { email, interests } = req.body;
+
+    if (!email || typeof email !== 'string') {
+      res.status(400).json({ error: 'Please provide a valid email address.' });
+      return;
+    }
+
+    const trimmedEmail = email.trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      res.status(400).json({ error: 'Please provide a valid email address format.' });
+      return;
+    }
+
+    const isExisting = subscribers.has(trimmedEmail);
+    const subscriberRecord: NewsletterSubscriber = {
+      email: trimmedEmail,
+      interests: Array.isArray(interests) ? interests : ['seasonal', 'shagun', 'bedsheets', 'deals'],
+      subscribedAt: isExisting ? subscribers.get(trimmedEmail)!.subscribedAt : new Date().toISOString(),
+    };
+
+    subscribers.set(trimmedEmail, subscriberRecord);
+
+    res.json({
+      success: true,
+      isExisting,
+      message: isExisting
+        ? 'Welcome back! Your preferences have been updated.'
+        : 'Thank you for joining the Radhyaa Insider Circle! Your welcome reward code is ready.',
+      coupon: 'FESTIVE10',
+      discountPercentage: 10,
+    });
+  } catch (error: any) {
+    console.error('Newsletter subscription error:', error);
+    res.status(500).json({ error: 'Failed to process subscription. Please try again.' });
+  }
+});
+
 // Production or Vite development middleware setup
 async function startServer() {
   if (process.env.NODE_ENV === 'production') {
     // Serve production static build
     const distPath = path.resolve(__dirname, 'dist');
     app.use(express.static(distPath));
+    app.use('/src/assets/images', express.static(path.resolve(__dirname, 'src/assets/images')));
+    app.use('/assets/images', express.static(path.resolve(__dirname, 'src/assets/images')));
     app.get('*', (_req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });

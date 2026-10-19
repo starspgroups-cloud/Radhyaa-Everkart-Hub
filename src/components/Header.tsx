@@ -28,8 +28,10 @@ export const Header: React.FC<HeaderProps> = ({
   onSearchOpen,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { cartCount, wishlist, setIsCartOpen, setIsWishlistOpen } = useCart();
+  const { cartCount, wishlist, wishlistCount, setIsCartOpen, setIsWishlistOpen } = useCart();
   const { rewards, setIsAccountDrawerOpen } = useRewards();
+
+  const currentWishlistCount = wishlistCount ?? wishlist.length;
 
   const navLinks: { label: string; page: PageView }[] = [
     { label: 'Home', page: 'home' },
@@ -123,18 +125,30 @@ export const Header: React.FC<HeaderProps> = ({
               <Search className="w-5 h-5" />
             </button>
 
-            {/* Wishlist Trigger */}
+            {/* Wishlist Trigger with Dynamic Counter Badge */}
             <button
               onClick={() => setIsWishlistOpen(true)}
-              aria-label="Wishlist"
-              className="relative p-2 text-stone-700 hover:text-[#112E1F] hover:bg-[#F5EFE6] rounded-full transition-colors"
+              aria-label={`Wishlist (${currentWishlistCount} ${currentWishlistCount === 1 ? 'item' : 'items'})`}
+              title={`Wishlist (${currentWishlistCount} ${currentWishlistCount === 1 ? 'item' : 'items'})`}
+              className="relative p-2 text-stone-700 hover:text-[#112E1F] hover:bg-[#F5EFE6] rounded-full transition-all group"
             >
-              <Heart className="w-5 h-5" />
-              {wishlist.length > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#1C4832] text-white text-[10px] font-semibold flex items-center justify-center tabular-nums">
-                  {wishlist.length}
-                </span>
-              )}
+              <div className="relative">
+                <Heart
+                  className={`w-5 h-5 transition-colors duration-200 ${
+                    currentWishlistCount > 0
+                      ? 'text-rose-600 fill-rose-600'
+                      : 'text-stone-700 group-hover:text-[#112E1F]'
+                  }`}
+                />
+                {currentWishlistCount > 0 && (
+                  <span
+                    key={currentWishlistCount}
+                    className="absolute -top-1.5 -right-2 min-w-4 h-4 px-1 rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center tabular-nums shadow-xs ring-2 ring-[#FAF8F5] animate-in zoom-in-75 duration-200"
+                  >
+                    {currentWishlistCount > 99 ? '99+' : currentWishlistCount}
+                  </span>
+                )}
+              </div>
             </button>
 
             {/* Account & Rewards Trigger */}
@@ -208,6 +222,30 @@ export const Header: React.FC<HeaderProps> = ({
               })}
 
               <div className="mt-4 pt-4 border-t border-[#ECE3D4] flex flex-col gap-2.5">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setIsWishlistOpen(true);
+                  }}
+                  className="flex items-center justify-between px-3 py-2.5 bg-white rounded-md text-xs font-semibold text-[#112E1F] border border-[#ECE3D4] hover:bg-[#F5EFE6] transition-colors"
+                >
+                  <span className="flex items-center gap-2">
+                    <Heart
+                      className={`w-4 h-4 ${
+                        currentWishlistCount > 0 ? 'text-rose-600 fill-rose-600' : 'text-stone-500'
+                      }`}
+                    />
+                    <span>Saved in Wishlist</span>
+                  </span>
+                  {currentWishlistCount > 0 ? (
+                    <span className="bg-rose-600 text-white px-2 py-0.5 rounded-full text-[10px] font-bold tabular-nums">
+                      {currentWishlistCount} {currentWishlistCount === 1 ? 'item' : 'items'}
+                    </span>
+                  ) : (
+                    <span className="text-stone-400 text-[11px] font-normal">0 items</span>
+                  )}
+                </button>
+
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);

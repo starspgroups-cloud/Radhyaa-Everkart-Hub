@@ -23,6 +23,7 @@ interface CartContextType {
   toggleWishlist: (productId: string, productName?: string) => void;
   isInWishlist: (productId: string) => boolean;
   cartCount: number;
+  wishlistCount: number;
   subtotal: number;
   discount: number;
   couponCode: string | null;
@@ -239,7 +240,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Discount calculation
   let discount = 0;
-  if (couponCode === 'FESTIVE10') {
+  if (couponCode === 'FESTIVE10' || couponCode === 'WELCOME10') {
     discount = Math.round(subtotal * 0.1);
   } else if (couponCode === 'RADHYAA15' && subtotal >= 1499) {
     discount = Math.round(subtotal * 0.15);
@@ -249,10 +250,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const applyCoupon = (code: string) => {
     const cleaned = code.trim().toUpperCase();
-    if (cleaned === 'FESTIVE10') {
-      setCouponCode('FESTIVE10');
-      localStorage.setItem('radhyaa_coupon', 'FESTIVE10');
-      showToast('Coupon FESTIVE10 applied! 10% instant festive discount added.');
+    if (cleaned === 'FESTIVE10' || cleaned === 'WELCOME10') {
+      setCouponCode(cleaned);
+      localStorage.setItem('radhyaa_coupon', cleaned);
+      showToast(`Coupon ${cleaned} applied! 10% instant festive discount added.`);
       return { success: true, message: '10% discount applied!' };
     }
     if (cleaned === 'RADHYAA15') {
@@ -294,6 +295,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         toggleWishlist,
         isInWishlist,
         cartCount,
+        wishlistCount: wishlist.length,
         subtotal,
         discount,
         couponCode,

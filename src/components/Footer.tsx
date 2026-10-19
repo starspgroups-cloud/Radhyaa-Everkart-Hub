@@ -14,6 +14,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
+import { NewsletterSignup } from './NewsletterSignup';
 import { PageView } from '../types';
 
 interface FooterProps {
@@ -89,6 +90,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPolicy, onOpen
           </div>
         </div>
       </div>
+
+      {/* Newsletter Signup Component */}
+      <NewsletterSignup />
 
       {/* Main Footer Links */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
