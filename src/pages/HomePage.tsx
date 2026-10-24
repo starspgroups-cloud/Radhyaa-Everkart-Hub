@@ -253,7 +253,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           >
             <div className="relative aspect-4/3 overflow-hidden bg-[#FAF8F5]">
               <img
-                src={ASSETS.prodPotliBags}
+                src={ASSETS.newPot16}
                 alt="Potli Bags and Lifestyle Homeware"
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

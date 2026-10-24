@@ -65,7 +65,7 @@ export const ShagunPage: React.FC<ShagunPageProps> = ({ onSelectProduct }) => {
 
           <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-25 pointer-events-none hidden md:block">
             <img
-              src={ASSETS.prodCurvedKundan}
+              src={ASSETS.newShg11}
               alt="Luxury Shagun Envelopes"
               className="w-full h-full object-cover object-center"
             />
